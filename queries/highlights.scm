@@ -1,11 +1,22 @@
-(pair
-  key: (_) @keyword)
+[
+  (true)
+  (false)
+] @constant.builtin.boolean
+(null) @constant.builtin
+(number) @constant.numeric
 
 (string) @string
+(escape_sequence) @constant.character.escape
 
-(object
-  "{" @escape
-  (_)
-  "}" @escape)
+(pair
+  key: (_) @variable.other.member)
 
 (comment) @comment
+
+":" @punctuation.delimiter
+[
+  "["
+  "]"
+  "{"
+  "}"
+] @punctuation.bracket
