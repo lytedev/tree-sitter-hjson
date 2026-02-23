@@ -10,8 +10,8 @@ module.exports = grammar(jsonc, {
 
     object: ($) => seq("{", lineBreakOrComma($.pair), "}"),
 
-    string: ($, original) => choice($.quoted_string, $.multiline_string),
-    //  choice($.quoted_string, $.multiline_string, $.quoteless_string),
+    string: ($, original) =>
+      choice($.quoted_string, $.multiline_string, $.quoteless_string),
 
     array: ($) => seq("[", lineBreakOrComma($._value), "]"),
 
@@ -27,14 +27,16 @@ module.exports = grammar(jsonc, {
     _quoted_string_content: ($) =>
       repeat1(choice(token.immediate(/[^\\"\'\n]+/), $.escape_sequence)),
 
-    //  quoteless string is conflicting with quoted string
-    //  quoteless_string: ($) => repeat1(/[^\n]+/),
+    quoteless_string: ($) =>
+      prec(-1, /[^ \t\n\r{}\[\],:'"#][^\n\r,:}\]]*/),
 
     multiline_string: ($) =>
       choice(seq("'''", "'''"), seq("'''", repeat1(/[^\\"\'\n]+/), "'''")),
 
-    //  escape_sequence: ($) => token.immediate(seq("\\", /(\"|\'|\\|\/|b|f|n|r|t|u)/)),
-    escape_sequence: ($, original) => original,
+    escape_sequence: ($) =>
+      token.immediate(
+        seq("\\", choice(/['"\\\/bfnrt]/, /u[0-9a-fA-F]{4}/))
+      ),
 
     comment: ($, original) => token(choice(original, seq("#", /.*/))),
   },

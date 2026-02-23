@@ -1,5 +1,7 @@
 {
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
   "name": "hjson",
+  "inherits": "jsonc",
   "rules": {
     "document": {
       "type": "CHOICE",
@@ -198,6 +200,10 @@
         {
           "type": "SYMBOL",
           "name": "multiline_string"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "quoteless_string"
         }
       ]
     },
@@ -230,8 +236,17 @@
             "value": "\\"
           },
           {
-            "type": "PATTERN",
-            "value": "(\\\"|\\\\|\\/|b|n|r|t|u)"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "['\"\\\\\\/bfnrt]"
+              },
+              {
+                "type": "PATTERN",
+                "value": "u[0-9a-fA-F]{4}"
+              }
+            ]
           }
         ]
       }
@@ -789,6 +804,14 @@
         ]
       }
     },
+    "quoteless_string": {
+      "type": "PREC",
+      "value": -1,
+      "content": {
+        "type": "PATTERN",
+        "value": "[^ \\t\\n\\r{}\\[\\],:'\"#][^\\n\\r,:}\\]]*"
+      }
+    },
     "multiline_string": {
       "type": "CHOICE",
       "members": [
@@ -844,6 +867,6 @@
   "inline": [],
   "supertypes": [
     "_value"
-  ]
+  ],
+  "reserved": {}
 }
-

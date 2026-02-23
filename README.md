@@ -19,6 +19,6 @@ Syntax highlight with neovim.
 
 [x] Handle multiline strings
 
-[ ] Handle quoteless strings
+[x] Handle quoteless strings
 
-[ ] Handle escape sequence in quoted strings
+[x] Handle escape sequence in quoted strings

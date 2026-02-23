@@ -3,12 +3,24 @@ Escape sequences in quoted string
 ======================
 
 [
-  '\"\'\\\/\b\f\n\r\t\u'
+  '\"\'\\\/\b\f\n\r\t'
 ]
 
 ---
 
-(document (array (string (quoted_string))))
+(document
+  (array
+    (string
+      (quoted_string
+        (escape_sequence)
+        (escape_sequence)
+        (escape_sequence)
+        (escape_sequence)
+        (escape_sequence)
+        (escape_sequence)
+        (escape_sequence)
+        (escape_sequence)
+        (escape_sequence)))))
 
 ======================
 Object key without quotes
@@ -165,3 +177,76 @@ Hash Comment inside array
 
 (document
   (array (comment) (string (quoted_string))))
+
+======================
+Quoteless string in array
+======================
+
+[
+  hello
+]
+
+---
+
+(document (array (string (quoteless_string))))
+
+======================
+Quoteless string with spaces
+======================
+
+[
+  hello world
+]
+
+---
+
+(document (array (string (quoteless_string))))
+
+======================
+Unquoted key with quoteless value
+======================
+
+{
+  foo: bar
+}
+
+---
+
+(document (object (pair (string (quoteless_string)) (string (quoteless_string)))))
+
+======================
+Unquoted key with quoted value
+======================
+
+{
+  foo: "bar"
+}
+
+---
+
+(document (object (pair (string (quoteless_string)) (string (quoted_string)))))
+
+======================
+Unicode escape sequence
+======================
+
+[
+  "\u0041"
+]
+
+---
+
+(document (array (string (quoted_string (escape_sequence)))))
+
+======================
+Quoteless value with trailing comma
+======================
+
+{
+  "foo": bar,
+  "baz": qux,
+}
+
+---
+
+(document (object (pair (string (quoted_string)) (string (quoteless_string))) (pair (string (quoted_string)) (string (quoteless_string)))))
